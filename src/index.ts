@@ -1,7 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { AnyRouter, TRPCError } from '@trpc/server';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { ZodError } from 'zod';
 
 type CreateRemixCallerParams<Ctx, CallerResponse> = {
   caller: (ctx: Ctx) => CallerResponse;
@@ -25,30 +24,27 @@ export const createRemixCaller =
 
 type RemixCaller<CallerResponse> = (request: Request) => Promise<CallerResponse>;
 
-export const createSafeRemixCaller = <Ctx, CallerResponse>({
+type CreateSafeRemixCallerParams<Ctx, CallerResponse, Err> = CreateRemixCallerParams<Ctx, CallerResponse> & {
+  formatError: (error: TRPCError) => Promise<Err>;
+};
+
+export const createSafeRemixCaller = <Ctx, CallerResponse, Err>({
   caller,
   adapter,
   onContextReady,
-}: CreateRemixCallerParams<Ctx, CallerResponse>) => {
+  formatError,
+}: CreateSafeRemixCallerParams<Ctx, CallerResponse, Err>) => {
   const remixCaller = createRemixCaller({ caller, adapter, onContextReady });
-  return async <R>(request: Request, callBack: (caller: CallerResponse) => Promise<R>) => {
+  return async <Res>(request: Request, callBack: (caller: CallerResponse) => Promise<Res>) => {
     try {
       const caller = await remixCaller(request);
       const data = await callBack(caller);
-      return { success: true, data } as const;
-    } catch (error) {
-      const err = error as TRPCError;
-      if (err.cause && err.cause instanceof ZodError) {
-        return { success: false, error: err.cause.flatten().fieldErrors } as const;
-      }
 
-      return {
-        success: false,
-        message: err.message,
-        code: err.code,
-        name: err.name,
-        error: err.cause as unknown as Record<string, string>,
-      } as const;
+      return { success: true, data, error: null } as const;
+    } catch (err) {
+      const error = await formatError(err as TRPCError);
+
+      return { success: false, error, data: null } as const;
     }
   };
 };

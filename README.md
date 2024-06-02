@@ -82,7 +82,7 @@ Now you can call your api server side in your loader or action.
 import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
 
 export const remixCaller = createRemixCaller({ adapter: remixAdapteur, caller: apiCaller });
-export const safeRemixCaller = createSafeRemixCaller({ adapter: remixAdapteur, caller: apiCaller });
+export const safeRemixCaller = createSafeRemixCaller({ adapter: remixAdapteur, caller: apiCaller, formatError });
 
 // Example with remixCaller
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -149,5 +149,20 @@ export const safeRemixCaller = createSafeRemixCaller({
   onContextReady: async (context) => {
     // Do something with the context before the api handler is called
   },
+  formatError,
+});
+```
+
+## Format error for safeRemixCaller
+
+You need to provide a format error function to the `createSafeRemixCaller` function.
+
+A simple format error function can be:
+
+```ts
+const formatError = (error: TRPCError) => ({
+  message: error.message,
+  code: error.code,
+  name: error.name,
 });
 ```
