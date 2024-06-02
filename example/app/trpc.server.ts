@@ -1,4 +1,4 @@
-import { inferAsyncReturnType, initTRPC } from '@trpc/server';
+import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 
 export const createApiContext = async (req: Request) => {
@@ -15,7 +15,7 @@ export const createApiContext = async (req: Request) => {
   return { domain, host, ip };
 };
 
-export type ApiContext = inferAsyncReturnType<typeof createApiContext>;
+export type ApiContext = Awaited<ReturnType<typeof createApiContext>>;
 
 export const trpc = initTRPC.context<ApiContext>().create({
   transformer: superjson,
