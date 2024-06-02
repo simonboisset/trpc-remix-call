@@ -67,7 +67,7 @@ You can also use the api handler to call your api server side.
 Same as before, you need to create an adapter for your api handler.
 
 ```ts
-export const remixServerSideAdapteur = async (request: Request): Promise<ApiContext> => {
+export const remixServerSideAdapter = async (request: Request): Promise<ApiContext> => {
   const token = await getTokenFromRequest(request);
 
   return { token };
@@ -85,8 +85,8 @@ Now you can call your api server side in your loader or action.
 ```ts
 import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
 
-export const remixCaller = createRemixCaller({ adapter: remixAdapteur, caller: apiCaller });
-export const safeRemixCaller = createSafeRemixCaller({ adapter: remixAdapteur, caller: apiCaller, formatError });
+export const remixCaller = createRemixCaller({ adapter: remixAdapter, caller: apiCaller });
+export const safeRemixCaller = createSafeRemixCaller({ adapter: remixAdapter, caller: apiCaller, formatError });
 
 // Example with remixCaller
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -140,7 +140,7 @@ Same for the server side call.
 import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
 
 export const remixCaller = createRemixCaller({
-  adapter: remixAdapteur,
+  adapter: remixAdapter,
   caller: apiCaller,
   onContextReady: async (context) => {
     // Do something with the context before the api handler is called
@@ -148,7 +148,7 @@ export const remixCaller = createRemixCaller({
 });
 
 export const safeRemixCaller = createSafeRemixCaller({
-  adapter: remixAdapteur,
+  adapter: remixAdapter,
   caller: apiCaller,
   onContextReady: async (context) => {
     // Do something with the context before the api handler is called
