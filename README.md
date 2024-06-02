@@ -2,6 +2,10 @@
 
 Trpc adapter form Remix with api handler and server side call.
 
+## Example
+
+Check the full example in here: [trpc-remix-example](/example/)
+
 ## Introduction
 
 As a Remix and trpc user, I wanted to use both together but I didn't find any easy way to do it simply.
