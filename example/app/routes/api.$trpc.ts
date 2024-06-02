@@ -10,7 +10,7 @@ export const action = async (args: ActionFunctionArgs) => {
   return handleRequest(args);
 };
 
-// To use this loader in your app, you can react components you need to create apiClient :
+// To use this loader or action in your react components you need to create apiClient :
 // This is for client side calls. For server side calls, you have to use `remixCaller` directly in loader or action.
 
 export const apiClient = createTRPCProxyClient<ApiRouter>({
