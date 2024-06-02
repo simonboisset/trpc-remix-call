@@ -1,6 +1,6 @@
 # trpc-remix-call
 
-Trpc adapter form Remix with api handler and server side call.
+Trpc adapter for Remix with api handler and server side call.
 
 ## Example
 
@@ -8,10 +8,11 @@ Check the full example in here: [trpc-remix-example](/example/)
 
 ## Introduction
 
-As a Remix and trpc user, I wanted to use both together but I didn't find any easy way to do it simply.
-Typically, I use client side call with trpc for my mobile app and server side call with trpc for my web app but this need many redundant code to get context each time.
+As a Remix and trpc user, I wanted to use both together nicely but I didn't found any library to do it simply.
+Typically, I use client side calls with trpc for my mobile app, server side calls with trpc for my web app.
+In order to achieve this, I had to create redundant code to get my trpc context each time.
 
-This package provide a simple way to use trpc with Remix in few lines of code.
+This package provides a simple way to use trpc with Remix in few lines of code and let you focus on your business logic.
 
 Feel free to open an issue if you have any problem. Any feedback is welcome.
 
@@ -21,9 +22,10 @@ Feel free to open an issue if you have any problem. Any feedback is welcome.
 npm install trpc-remix-call
 ```
 
-## Api handler
+## API handler
 
-First you need to create an adapter for your api handler. This adapter must return the trpc context.
+Start by creating an adapter for your api handler. 
+This adapter must return the trpc context.
 
 ```ts
 import type { RemixHandlerAdapterArgs } from 'trpc-remix-call';
@@ -35,7 +37,7 @@ const remixHandlerAdapter = ({ req }: RemixHandlerAdapterArgs): ApiContext => {
 };
 ```
 
-Now you can create your api handler.
+After that, you can create your api handler.
 
 ```ts
 import { createTrpcRemixHandler } from 'trpc-remix-call';
@@ -47,7 +49,7 @@ const apiRemixHandler = createTrpcRemixHandler({
 });
 ```
 
-Create your api route file `api.$trpc` and export `loader` and `action`.
+Now, create your api route file `api.$trpc` and export the `loader` and `action` functions.
 
 ```ts
 export const loader = async (args: LoaderFunctionArgs) => {
@@ -58,13 +60,13 @@ export const action = async (args: ActionFunctionArgs) => {
 };
 ```
 
-That's it, you can now use your api handler with your trpc client.
+That's it for the client side. You can now use the api handler within your client side code.
 
 ## Server side call
 
-You can also use the api handler to call your api server side.
+For server side calls, you have to create a server side adapter for your context.
 
-Same as before, you need to create an adapter for your api handler.
+Same as before, we start with creating an adapter for our context.
 
 ```ts
 export const remixServerSideAdapter = async (request: Request): Promise<ApiContext> => {
@@ -74,13 +76,13 @@ export const remixServerSideAdapter = async (request: Request): Promise<ApiConte
 };
 ```
 
-Also create your trpc api caller.
+Now create the trpc api caller with the trpc router context.
 
 ```ts
 const trpcCaller = trpc.createCallerFactory(trpcRouter);
 ```
 
-Now you can call your api server side in your loader or action.
+Whit that done,you can call your api server side in your loader or action.
 
 ```ts
 import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
