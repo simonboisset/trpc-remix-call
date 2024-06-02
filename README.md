@@ -112,3 +112,42 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 };
 ```
+
+## On context ready hook
+
+You can also use the `onContextReady` hook to execute some code when the context is ready and before the api handler is called.
+
+```ts
+import { createTrpcRemixHandler } from 'trpc-remix-call';
+
+const apiRemixHandler = createTrpcRemixHandler({
+  endpoint: '/api',
+  router: apiRouter,
+  adapter: remixHandlerAdapter,
+  onContextReady: async (context) => {
+    // Do something with the context before the api handler is called
+  },
+});
+```
+
+Same for the server side call.
+
+```ts
+import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
+
+export const remixCaller = createRemixCaller({
+  adapter: remixAdapteur,
+  caller: apiCaller,
+  onContextReady: async (context) => {
+    // Do something with the context before the api handler is called
+  },
+});
+
+export const safeRemixCaller = createSafeRemixCaller({
+  adapter: remixAdapteur,
+  caller: apiCaller,
+  onContextReady: async (context) => {
+    // Do something with the context before the api handler is called
+  },
+});
+```

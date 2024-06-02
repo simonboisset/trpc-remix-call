@@ -7,30 +7,31 @@ import { ZodError } from 'zod';
 type CreateRemixCallerParams<Ctx, CallerResponse> = {
   caller: (ctx: Ctx) => CallerResponse;
   adapter: (request: Request) => Promise<Ctx>;
+  onContextReady?: (ctx: Ctx) => Promise<void>;
 };
 
 export const createRemixCaller =
   <Ctx, CallerResponse>({
     caller,
     adapter,
+    onContextReady,
   }: CreateRemixCallerParams<Ctx, CallerResponse>): RemixCaller<CallerResponse> =>
   async (request: Request) => {
     const ctx = await adapter(request);
+    if (onContextReady) {
+      await onContextReady(ctx);
+    }
     return caller(ctx);
   };
 
 type RemixCaller<CallerResponse> = (request: Request) => Promise<CallerResponse>;
 
-type CreateSafeRemixCallerParams<Ctx, CallerResponse> = {
-  caller: (ctx: Ctx) => CallerResponse;
-  adapter: (request: Request) => Promise<Ctx>;
-};
-
 export const createSafeRemixCaller = <Ctx, CallerResponse>({
   caller,
   adapter,
-}: CreateSafeRemixCallerParams<Ctx, CallerResponse>) => {
-  const remixCaller = createRemixCaller({ caller, adapter });
+  onContextReady,
+}: CreateRemixCallerParams<Ctx, CallerResponse>) => {
+  const remixCaller = createRemixCaller({ caller, adapter, onContextReady });
   return async <R>(request: Request, callBack: (caller: CallerResponse) => Promise<R>) => {
     try {
       const caller = await remixCaller(request);
@@ -59,16 +60,23 @@ export const createTrpcRemixHandler =
   <Router extends AnyRouter, Ctx>({
     router,
     adapter,
+    onContextReady,
     endpoint,
   }: {
     router: Router;
-    adapter: (args: FetchCreateContextFnOptions) => Ctx;
+    adapter: (request: Request) => Promise<Ctx>;
+    onContextReady?: (ctx: Ctx) => Promise<void>;
     endpoint: string;
   }) =>
-  async (args: LoaderFunctionArgs | ActionFunctionArgs) =>
-    fetchRequestHandler({
+  async (args: LoaderFunctionArgs | ActionFunctionArgs) => {
+    const ctx = await adapter(args.request);
+    if (onContextReady) {
+      await onContextReady(ctx);
+    }
+    return fetchRequestHandler({
       endpoint,
       req: args.request,
       router,
-      createContext: adapter,
+      createContext: () => ctx,
     });
+  };
