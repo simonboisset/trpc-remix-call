@@ -1,6 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { AnyRouter, TRPCError } from '@trpc/server';
-import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { ZodError } from 'zod';
 
@@ -54,7 +53,12 @@ export const createSafeRemixCaller = <Ctx, CallerResponse>({
   };
 };
 
-export type RemixHandlerAdapterArgs = FetchCreateContextFnOptions;
+type CreateRemixHandlerParams<Router extends AnyRouter, Ctx> = {
+  router: Router;
+  adapter: (request: Request) => Promise<Ctx>;
+  onContextReady?: (ctx: Ctx) => Promise<void>;
+  endpoint: string;
+};
 
 export const createTrpcRemixHandler =
   <Router extends AnyRouter, Ctx>({
@@ -62,12 +66,7 @@ export const createTrpcRemixHandler =
     adapter,
     onContextReady,
     endpoint,
-  }: {
-    router: Router;
-    adapter: (request: Request) => Promise<Ctx>;
-    onContextReady?: (ctx: Ctx) => Promise<void>;
-    endpoint: string;
-  }) =>
+  }: CreateRemixHandlerParams<Router, Ctx>) =>
   async (args: LoaderFunctionArgs | ActionFunctionArgs) => {
     const ctx = await adapter(args.request);
     if (onContextReady) {
