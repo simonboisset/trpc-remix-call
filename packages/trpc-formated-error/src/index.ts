@@ -2,20 +2,7 @@ import { TRPCClientError } from '@trpc/client';
 import { DefaultErrorShape, TRPCError } from '@trpc/server';
 import { getSafeCause } from './safe-cause';
 import { TrpcFormatedError } from './types';
-
-/**
- * Creates a new TRPCError with the given properties.
- * @param {TrpcFormatedError} props - The properties to create the error with.
- * @returns {TRPCError} A new TRPCError instance.
- */
-export const createTrpcFormatedError = (props: TrpcFormatedError): TRPCError => {
-  return new TRPCError({
-    code: props.code,
-    message: props.title,
-    cause: props,
-  });
-};
-
+export * from './create-formated-error';
 /**
  * Extracts the formated error from a client error.
  * @param {unknown} error - The error to extract the formated error from.

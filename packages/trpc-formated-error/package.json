@@ -1,6 +1,6 @@
 {
   "name": "trpc-formated-error",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Trpc adapter for Remix with api handler and server side call.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
