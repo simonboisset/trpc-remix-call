@@ -1,47 +1,30 @@
 {
-  "name": "trpc-remix-call",
-  "version": "0.3.3",
-  "description": "Trpc adapter for Remix with api handler and server side call.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
+  "name": "trpc-remix-repo",
+  "version": "0.5.0",
+  "private": true,
+  "workspaces": [
+    "examples/*",
+    "packages/*"
   ],
   "scripts": {
-    "build": "tsup"
+    "build": "turbo build",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "ts": "turbo ts",
+    "test": "turbo test"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/simonboisset/trpc-remix-call"
-  },
-  "bugs": {
-    "url": "https://github.com/simonboisset/trpc-remix-call/issues"
-  },
-  "homepage": "https://github.com/simonboisset/trpc-remix-call",
-  "author": "Simon Boisset <simon@lezo.dev>",
-  "license": "MIT",
   "devDependencies": {
-    "@remix-run/node": "^2.9.2",
-    "@trpc/server": "^10.45.2",
-    "prettier": "^3.3.0",
-    "tsup": "^8.2.1",
-    "typescript": "^5.4.5"
+    "monoversion": "^1.2.2",
+    "prettier": "^3.3.2",
+    "turbo": "^2.0.6"
   },
   "prettier": {
     "singleQuote": true,
     "tabWidth": 2,
-    "printWidth": 120
+    "printWidth": 120,
+    "arrowParens": "avoid",
+    "bracketSameLine": true,
+    "bracketSpacing": false,
+    "trailingComma": "all"
   },
-  "peerDependencies": {
-    "@remix-run/node": "^2.5.1",
-    "@trpc/server": "^10.45.0"
-  },
-  "keywords": [
-    "trpc",
-    "remix",
-    "api",
-    "handler",
-    "serve-side-call"
-  ]
+  "packageManager": "pnpm@9.5.0+sha256.dbdf5961c32909fb030595a9daa1dae720162e658609a8f92f2fa99835510ca5"
 }

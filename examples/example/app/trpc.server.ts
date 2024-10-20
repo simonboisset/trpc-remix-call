@@ -1,5 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
+import { trpcErrorFormatter } from 'trpc-formated-error';
 
 export const createApiContext = async (req: Request) => {
   const host = req.headers.get('host') || '';
@@ -12,14 +13,12 @@ export const createApiContext = async (req: Request) => {
     req.headers.get('x-client-ip') ||
     'unknown';
 
-  return { domain, host, ip };
+  return {domain, host, ip};
 };
 
 export type ApiContext = Awaited<ReturnType<typeof createApiContext>>;
 
 export const trpc = initTRPC.context<ApiContext>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return { ...shape };
-  },
+  errorFormatter:trpcErrorFormatter
 });

@@ -2,7 +2,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/reac
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './query-client';
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <head>
@@ -14,15 +14,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           <nav>
-            <ul style={{ display: 'flex', listStyle: 'none', padding: 0 }}>
-              <li style={{ marginRight: '1rem' }}>
+            <ul style={{display: 'flex', listStyle: 'none', padding: 0}}>
+              <li style={{marginRight: '1rem'}}>
                 <a href="/">Server Call</a>
               </li>
-              <li style={{ marginRight: '1rem' }}>
+              <li style={{marginRight: '1rem'}}>
                 <a href="/client-call">Client Call</a>
               </li>
-              <li>
+              <li style={{marginRight: '1rem'}}>
                 <a href="/component-call">Component Call</a>
+              </li>
+              <li style={{marginRight: '1rem'}}>
+                <a href="/error">Error</a>
+              </li>
+              <li style={{marginRight: '1rem'}}>
+                <a href="/error-client">Error Client</a>
+              </li>
+              <li style={{marginRight: '1rem'}}>
+                <a href="/error-component">Error Component</a>
               </li>
             </ul>
           </nav>

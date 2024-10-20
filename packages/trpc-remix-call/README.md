@@ -4,7 +4,7 @@ Trpc adapter for Remix with api handler and server side call.
 
 ## Example
 
-Check the full example in here: [trpc-remix-example](/examples/example)
+Check the full example in here: [trpc-remix-example](/example/)
 
 ## Introduction
 
@@ -30,7 +30,7 @@ Start by defining your context with a function that gets the Request and returns
 export const createApiContext = async (req: Request) => {
   const token = req.headers.get('authorization')?.replace('Bearer ', '') || null;
 
-  return {token};
+  return { token };
 };
 
 export type ApiContext = Awaited<ReturnType<typeof createApiContext>>;
@@ -41,7 +41,7 @@ export type ApiContext = Awaited<ReturnType<typeof createApiContext>>;
 After that, you can create your api handler.
 
 ```ts
-import {createTrpcRemixHandler} from 'trpc-remix-call';
+import { createTrpcRemixHandler } from 'trpc-remix-call';
 
 export const handleRequest = createTrpcRemixHandler({
   router: trpcRouter,
@@ -74,13 +74,13 @@ const apiCaller = trpc.createCallerFactory(trpcRouter);
 Whit that done, you can call your api server side in your loader or action.
 
 ```ts
-import {createRemixCaller, createSafeRemixCaller} from 'trpc-remix-call';
+import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
 
-export const remixCaller = createRemixCaller({adapter: createApiContext, caller: apiCaller});
-export const safeRemixCaller = createSafeRemixCaller({adapter: createApiContext, caller: apiCaller, formatError});
+export const remixCaller = createRemixCaller({ adapter: createApiContext, caller: apiCaller });
+export const safeRemixCaller = createSafeRemixCaller({ adapter: createApiContext, caller: apiCaller, formatError });
 
 // Example with remixCaller
-export const loader = async ({request}: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     const caller = await remixCaller(request);
     const result = await caller.auth.signup(data);
@@ -92,8 +92,8 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 };
 
 // Example with safeRemixCaller
-export const loader = async ({request}: LoaderFunctionArgs) => {
-  const safeResult = await safeRemixCaller(request, caller => caller.auth.signup(data));
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const safeResult = await safeRemixCaller(request, (caller) => caller.auth.signup(data));
   const result = await caller.auth.signup(data);
 
   if (getCurrentUser.success) {
@@ -113,13 +113,13 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 You can also use the `onContextReady` hook to execute some code when the context is ready and before the api handler is called.
 
 ```ts
-import {createTrpcRemixHandler} from 'trpc-remix-call';
+import { createTrpcRemixHandler } from 'trpc-remix-call';
 
 const apiRemixHandler = createTrpcRemixHandler({
   endpoint: '/api',
   router: trpcRouter,
   adapter: createApiContext,
-  onContextReady: async context => {
+  onContextReady: async (context) => {
     // Do something with the context before the api handler is called
   },
 });
@@ -128,12 +128,12 @@ const apiRemixHandler = createTrpcRemixHandler({
 Same for the server side call.
 
 ```ts
-import {createRemixCaller, createSafeRemixCaller} from 'trpc-remix-call';
+import { createRemixCaller, createSafeRemixCaller } from 'trpc-remix-call';
 
 export const remixCaller = createRemixCaller({
   adapter: createApiContext,
   caller: apiCaller,
-  onContextReady: async context => {
+  onContextReady: async (context) => {
     // Do something with the context before the api handler is called
   },
 });
@@ -141,7 +141,7 @@ export const remixCaller = createRemixCaller({
 export const safeRemixCaller = createSafeRemixCaller({
   adapter: createApiContext,
   caller: apiCaller,
-  onContextReady: async context => {
+  onContextReady: async (context) => {
     // Do something with the context before the api handler is called
   },
   formatError,

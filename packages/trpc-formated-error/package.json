@@ -1,0 +1,46 @@
+{
+  "name": "trpc-formated-error",
+  "version": "0.3.3",
+  "description": "Trpc adapter for Remix with api handler and server side call.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simonboisset/trpc-remix-call",
+    "directory": "packages/trpc-formated-error"
+  },
+  "bugs": {
+    "url": "https://github.com/simonboisset/trpc-remix-call/issues"
+  },
+  "homepage": "https://github.com/simonboisset/trpc-remix-call",
+  "author": "Simon Boisset <simon@lezo.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "@remix-run/node": "^2.9.2",
+    "prettier": "^3.3.0",
+    "tsup": "^8.2.1",
+    "typescript": "^5.4.5"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "printWidth": 120
+  },
+  "peerDependencies": {
+    "@remix-run/node": "^2.5.1",
+    "@trpc/client": "^10.45.2",
+    "@trpc/server": "^10.45.0",
+    "zod": "^3.23.8"
+  },
+  "keywords": [
+    "trpc",
+    "error"
+  ]
+}
